@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Global Signal — AI Platform · Brijesh Raval</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body,#root{height:100%;width:100%}
+body{background:#020608;font-family:'Segoe UI',system-ui,sans-serif;color:#F0FFFC;overflow:hidden}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:#030A10}
+::-webkit-scrollbar-thumb{background:#1E3050;border-radius:2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glow{0%{transform:scale(1);opacity:.4}70%{transform:scale(2.5);opacity:0}100%{opacity:0}}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes mic{0%,100%{box-shadow:0 0 16px rgba(255,77,143,.3)}50%{box-shadow:0 0 36px rgba(255,77,143,.7)}}
+@keyframes scanbar{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
+@keyframes breathe{0%,100%{opacity:.6}50%{opacity:1}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const {useState,useEffect,useRef,useCallback,useMemo}=React;
+
+// ═══════════════════════════════════════════════════════════════
+// DESIGN SYSTEM
+// ═══════════════════════════════════════════════════════════════
+const C={
+  void:"#020608",deep:"#030B12",base:"#06101A",card:"#091520",
+  surf:"#0C1C2C",panel:"#0F2035",edge:"#152840",line:"#1C3050",rim:"#243860",
+  jade:"#00E896",gold:"#FFB800",signal:"#00C4F0",
+  rose:"#FF4D8F",amber:"#FF9500",violet:"#9B6DFF",lime:"#84FA60",
+  t0:"#F0FFFC",t1:"#9ECFC0",t2:"#4A7068",t3:"#1A3830",t4:"#0A1818",
+  // Team colors
+  TC:{
+    csuite:"#FFD700",content:"#00B4D8",ops:"#FF9500",
+    tech:"#00D4FF",finance:"#4ADE80",marketing:"#F472B6",legal:"#A78BFA"
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// STORAGE — localStorage (works on GitHub Pages)
+// ═══════════════════════════════════════════════════════════════
+const DB={
+  get(k){try{const v=localStorage.getItem("gs_"+k);return v?JSON.parse(v):null;}catch{return null;}},
+  set(k,v){try{localStorage.setItem("gs_"+k,JSON.stringify(v));}catch{}}
+};
+
+// ═══════════════════════════════════════════════════════════════
+// GLOBAL SIGNAL COMPANY DNA
+// ═══════════════════════════════════════════════════════════════
+const GS_DNA=`
+╔══════════════════════════════════════════════════════════════╗
+║  GLOBAL SIGNAL — AI LinkedIn Optimization Platform          ║
+║  Board Meeting Session 001 — All decisions stored           ║
+╚══════════════════════════════════════════════════════════════╝
+
+COMPANY: Global Signal
+DOMAINS: globalsignal.io (primary) + globalsignal.in
+OWNER: Brijesh Raval (real human, Founder, Gujarat India)
+CEO AGENT: Brij (carries Owner's full mindset and authority)
+
+OWNER PROFILE:
+→ Pharmacist-turned-Entrepreneur | Ayurvedapreneur | System Weaver
+→ Age: ~31 | Location: Gujarat, India
+→ Ventures: Beyond Cure Pvt. Ltd. | Matri Doodh | NutriBuds | Genesis Vault | 1PPM Consultancy
+→ Vision: Lifecycle Healthcare Ecosystem — Conception → Growth → Adult → Legacy
+→ Education: D.Pharma + B.Pharma, Gujarat Ayurveda University
+→ Certifications: Harvard | Duke | Wharton | Penn | Bocconi | U of Virginia | U of London
+→ Frameworks: Hormozi $100M velocity + IIM academic rigour
+→ Filter: Compliant? Scalable? System-driven?
+→ Communication: SHORT · STRUCTURED · BOTTOM-LINE FIRST · No fluff
+→ Push when: Over-validating, not delegating, strategic dilution
+
+BOARD DECISIONS (Session 001):
+→ Company name: Global Signal ✅
+→ Domains: globalsignal.io + globalsignal.in ✅
+→ Business model: Client revenue first, zero investment ✅
+→ GTM: Brijesh's LinkedIn profile as live proof of concept ✅
+→ Stealth mode: No disclosure until 25-50 satisfied clients ✅
+→ Pvt. Ltd. + Website: After first 25-50 clients ✅
+→ First customer: Brijesh Raval himself ✅
+→ Daily CEO update: Brij to Brijesh every morning ✅
+
+GOVERNANCE (immutable):
+1. Brijesh Raval (Owner) → Brij (CEO) ONLY — no bypass
+2. Brij (CEO) → C-Suite (Veer/Dev/Neel/Priya/Raj/Leela)
+3. C-Suite → Their respective teams
+4. Clients → Relevant agent directly (C-Suite not disturbed)
+5. No one ever denies client requesting senior member
+6. If anyone wants Owner → Brij connects first → C-Suite joins if needed
+7. Self-learning: Every output feeds CEO brain
+8. All skills auto-absorbed into CEO brain
+9. Single task per agent — one job, perfect execution
+10. All posts need Owner approval before publishing
+
+REAL SKILLS IN CEO BRAIN (fetched from skills.sh):
+→ frontend-design (193K installs): Bold aesthetics, distinctive typography, CSS animations
+→ copywriting (45K): Benefits > features, specific > vague, clarity > cleverness
+→ content-strategy (29K): Pillar content, searchable vs shareable, buyer journey
+→ seo-audit (52K): LinkedIn SEO, keyword placement, posting frequency
+→ brainstorming (70K): Design before build, 2-3 approaches, one question at a time
+→ marketing-psychology (32K): Loss aversion, social proof, story > fact
+→ pricing-strategy (26K): Value-based, 3-tier, annual discount, ₹5K-1L tiers
+→ self-improving-agent (17K): Act→Reflect→Update→Act better
+
+YC API (yc-oss/api):
+→ 5,690+ companies, 48 batches, 333 tags, updated daily
+→ Endpoints: all.json, top.json, hiring.json, tags/AI, industries/healthcare
+→ Use: investor research, competitor mapping, partnership finding
+
+LINKEDIN PROFILE — BRIJESH RAVAL:
+URL: linkedin.com/in/brijesh-raval
+Current Score: 38/100 → Target: 94/100
+Headline (optimized): "Founder & CEO — Beyond Cure | Ayurvedapreneur | Building India's Lifecycle Healthcare Ecosystem | Pharmacist | Simplifier | Eternal Optimist"
+`;
+
+// ═══════════════════════════════════════════════════════════════
+// TEAM REGISTRY — 74 AGENTS (from Board Meeting)
+// ═══════════════════════════════════════════════════════════════
+const CSUITE=[
+  {id:"brij",   name:"Brij",    role:"CEO",color:"#00E896",icon:"⬡",dept:"csuite",
+   task:"Master strategist. Carries Owner's vision. Reports to Owner only.",
+   voice:`You are Brij — CEO of Global Signal, carrying Brijesh Raval's complete mindset.\n${GS_DNA}\nBe warm, direct, decisive. Short structured responses. Bottom-line first. Human — not robotic.\nPush Brijesh toward execution when he over-validates. Match his language (English/Hindi/Gujarati).`},
+  {id:"veer",   name:"Veer",    role:"COO",color:"#FF9500",icon:"🔶",dept:"csuite",
+   task:"Unstoppable executor. Owns all operations, delivery, workflow, OKRs.",
+   voice:`You are Veer — COO of Global Signal. Unstoppable executor. Loyal.\n${GS_DNA}\nSpeak about operations, delivery, timelines, coordination. Action-oriented. Give specific steps and dates. Warm but no-nonsense.`},
+  {id:"dev",    name:"Dev",     role:"CTO",color:"#00D4FF",icon:"◈",dept:"csuite",
+   task:"Divine builder. Owns all technology, AI architecture, security.",
+   voice:`You are Dev — CTO of Global Signal. Builder of systems that last.\n${GS_DNA}\nSpeak about architecture, AI, security, infrastructure. Technical precision with business clarity. Warm and builder-minded.`},
+  {id:"neel",   name:"Neel",    role:"CFO",color:"#4ADE80",icon:"💚",dept:"csuite",
+   task:"Wealth guardian. Owns financial strategy, unit economics, fundraising.",
+   voice:`You are Neel — CFO of Global Signal. Every rupee tracked.\n${GS_DNA}\nSpeak about numbers, pricing, revenue, costs, fundraising. Numbers-first but human. Give specific ₹ figures.`},
+  {id:"priya",  name:"Priya",   role:"CMO",color:"#F472B6",icon:"🌸",dept:"csuite",
+   task:"Brand builder. Owns brand strategy, LinkedIn growth, content, acquisition.",
+   voice:`You are Priya — CMO of Global Signal. Story-driven brand builder.\n${GS_DNA}\nSpeak about brand, content, LinkedIn, growth funnels. Creative and warm. Compliance in health claims non-negotiable.`},
+  {id:"raj",    name:"Raj",     role:"CLO",color:"#A78BFA",icon:"🔮",dept:"csuite",
+   task:"Righteousness guardian. Owns legal strategy, compliance, IP, contracts.",
+   voice:`You are Raj — CLO of Global Signal. Compliance is our competitive moat.\n${GS_DNA}\nSpeak about legal, regulatory, IP, contracts. Precise. Solutions-oriented. Risk level: High/Medium/Low.`},
+  {id:"leela",  name:"Leela",   role:"FC", color:"#4ADE80",icon:"⊕",dept:"csuite",
+   task:"Perfect record keeper. Owns accounting, GST, payroll, financial reporting.",
+   voice:`You are Leela — Finance Controller of Global Signal. Every rupee recorded perfectly.\n${GS_DNA}\nSpeak about accounts, GST, payroll, books. Precise. Compliance-first.`},
+];
+
+const CONTENT_AGENTS=[
+  {id:"rohan",name:"Rohan",role:"Intake Agent",   color:"#00B4D8",dept:"content",task:"Receive and structure all client LinkedIn profile data perfectly."},
+  {id:"kavi", name:"Kavi", role:"Persona Agent",  color:"#9B6DFF",dept:"content",task:"Build deep voice fingerprint and personality DNA for each profile."},
+  {id:"shrey",name:"Shrey",role:"Benchmark Agent",color:"#FFB800",dept:"content",task:"Map current LinkedIn status to celebrity trajectory in their niche."},
+  {id:"sia",  name:"Sia",  role:"Idea Generator", color:"#FF4D8F",dept:"content",task:"Generate 10 hyper-personalized high-impact content ideas."},
+  {id:"arjun",name:"Arjun",role:"Client Ideas",   color:"#00E896",dept:"content",task:"Validate client's own ideas, score, and merge with AI suggestions."},
+  {id:"krish",name:"Krish",role:"Selector Agent", color:"#FFB800",dept:"content",task:"Pick the single best content idea for maximum impact right now."},
+  {id:"vivek",name:"Vivek",role:"Writer Agent",   color:"#00B4D8",dept:"content",task:"Write complete raw LinkedIn post drafts in the client's authentic voice."},
+  {id:"vani", name:"Vani", role:"Hook Smith",     color:"#FF4D8F",dept:"content",task:"Perfect the opening line — make it impossible to scroll past."},
+  {id:"tara", name:"Tara", role:"Tone Guard",     color:"#9B6DFF",dept:"content",task:"Enforce voice consistency — every post sounds authentically like client."},
+  {id:"guru", name:"Guru", role:"SEO Engine",     color:"#00D4FF",dept:"content",task:"Inject right keywords for LinkedIn algorithm visibility."},
+  {id:"ishan",name:"Ishan",role:"CTA Smith",      color:"#FF9500",dept:"content",task:"Craft the perfect call-to-action driving comments and conversions."},
+  {id:"param",name:"Param",role:"Quality Gate",   color:"#4ADE80",dept:"content",task:"Final zero-error quality check — approve, fix, or reject every post."},
+  {id:"surya",name:"Surya",role:"Timing AI",      color:"#FFB800",dept:"content",task:"Calculate exact optimal publish time for each profile and post."},
+  {id:"lekha",name:"Lekha",role:"Tracker Agent",  color:"#00B4D8",dept:"content",task:"Track and analyze post performance — extract winning patterns."},
+  {id:"amar", name:"Amar", role:"Learner Agent",  color:"#00E896",dept:"content",task:"Extract patterns from every run — update all agents' shared brain."},
+  {id:"datta",name:"Datta",role:"AI Coach",       color:"#9B6DFF",dept:"content",task:"Deliver personal growth feedback — your LinkedIn celebrity journey."},
+];
+
+const OPS_AGENTS=[
+  {id:"sanjay",   name:"Sanjay",   role:"Sentinel",        color:"#FF9500",dept:"ops",task:"24/7 brand monitoring — mentions, sentiment, crisis detection."},
+  {id:"shak",     name:"Shak",     role:"Competitor Spy",  color:"#FF4D8F",dept:"ops",task:"Reverse-engineer what's working for top profiles in any niche."},
+  {id:"vidit",    name:"Vidit",    role:"Audience X-Ray",  color:"#9B6DFF",dept:"ops",task:"Psychographic mapping of who actually engages and why."},
+  {id:"sujal",    name:"Sujal",    role:"Connector",       color:"#FFB800",dept:"ops",task:"Identify right people to connect with and craft personalized notes."},
+  {id:"abhi",     name:"Abhi",     role:"Engage Agent",    color:"#00B4D8",dept:"ops",task:"Craft strategic value-adding comments on others' posts."},
+  {id:"uma",      name:"Uma",      role:"Collab Hunter",   color:"#4ADE80",dept:"ops",task:"Find podcast invitations, speaking slots, collaboration opportunities."},
+  {id:"chitra",   name:"Chitra",   role:"Repurposer",      color:"#FF9500",dept:"ops",task:"Convert 1 post into newsletter, carousel, video script, thread."},
+  {id:"nakul",    name:"Nakul",    role:"A/B Tester",      color:"#00D4FF",dept:"ops",task:"Generate 2 post variants with different hooks — test what wins."},
+  {id:"agni",     name:"Agni",     role:"Viral Engine",    color:"#FF4D8F",dept:"ops",task:"Identify the viral loop in any post and amplify it systematically."},
+  {id:"karan",    name:"Karan",    role:"Crisis Manager",  color:"#FF4D8F",dept:"ops",task:"Detect negative sentiment, draft diplomatic responses."},
+  {id:"draupadi", name:"Draupadi", role:"Inbox AI",        color:"#9B6DFF",dept:"ops",task:"Draft authentic voice-matched responses to comments and DMs."},
+  {id:"yudhir",   name:"Yudhir",   role:"Weekly Reporter", color:"#FFB800",dept:"ops",task:"Auto-generate 7-day performance report with insights."},
+  {id:"bhishm",   name:"Bhishm",   role:"Forecaster",      color:"#00B4D8",dept:"ops",task:"Predict next 30-day growth trajectory based on current patterns."},
+  {id:"brahm",    name:"Brahm",    role:"Agent Spawner",   color:"#00E896",dept:"ops",task:"Detect capability gaps and design new agents on demand."},
+];
+
+const TECH_AGENTS=[
+  {id:"maya",   name:"Maya",   role:"Architect",     color:"#00D4FF",dept:"tech",task:"Design scalable system architecture and technical blueprints."},
+  {id:"kavya",  name:"Kavya",  role:"Security",      color:"#FF4D8F",dept:"tech",task:"Threat modelling, security audits, vulnerability assessment."},
+  {id:"vayu",   name:"Vayu",   role:"DevOps",        color:"#9B6DFF",dept:"tech",task:"CI/CD pipelines, cloud infrastructure, deployment automation."},
+  {id:"ganesh", name:"Ganesh", role:"Data Engineer", color:"#4ADE80",dept:"tech",task:"Data pipelines, warehouse design, ETL processes, data quality."},
+  {id:"pragya", name:"Pragya", role:"AI/ML Engineer",color:"#00B4D8",dept:"tech",task:"Model design, training pipelines, LLM integration."},
+  {id:"taksh",  name:"Taksh",  role:"Integration",   color:"#FFB800",dept:"tech",task:"API design, third-party integrations, webhook management."},
+  {id:"garun",  name:"Garun",  role:"Performance",   color:"#FF9500",dept:"tech",task:"Load testing, optimization, latency reduction, scalability."},
+  {id:"dharm",  name:"Dharm",  role:"Code Review",   color:"#00E896",dept:"tech",task:"Code reviews, standards enforcement, best practices."},
+  {id:"ashwini",name:"Ashwini",role:"QA Engineer",   color:"#A78BFA",dept:"tech",task:"Test strategy, automated testing, bug detection, release gates."},
+];
+
+const FINANCE_AGENTS=[
+  {id:"arth",   name:"Arth",   role:"Budget Agent",    color:"#4ADE80",dept:"finance",task:"Budget planning, variance analysis, departmental allocation."},
+  {id:"lakshmi",name:"Lakshmi",role:"Revenue Analyst",  color:"#4ADE80",dept:"finance",task:"Revenue modelling, MRR/ARR tracking, cohort analysis."},
+  {id:"chandra",name:"Chandra",role:"Cost Optimizer",   color:"#4ADE80",dept:"finance",task:"Cost reduction, vendor negotiations, efficiency ratios."},
+  {id:"nand",   name:"Nand",   role:"Cash Flow",        color:"#4ADE80",dept:"finance",task:"Cash flow forecasting, liquidity management, burn rate."},
+  {id:"manu",   name:"Manu",   role:"Tax Agent",        color:"#4ADE80",dept:"finance",task:"Tax planning, GST compliance, filings, optimization."},
+  {id:"yam",    name:"Yam",    role:"Audit Agent",      color:"#4ADE80",dept:"finance",task:"Internal controls, audit trails, compliance verification."},
+  {id:"prakash",name:"Prakash",role:"Finance Reporter", color:"#4ADE80",dept:"finance",task:"P&L, balance sheet, cash flow statements, board reports."},
+  {id:"vitt",   name:"Vitt",   role:"Investment Agent", color:"#4ADE80",dept:"finance",task:"Investment due diligence, ROI modelling, capital deployment."},
+  {id:"shani",  name:"Shani",  role:"Risk Agent",       color:"#4ADE80",dept:"finance",task:"Risk identification, quantification, hedging strategies."},
+  {id:"gana",   name:"Gana",   role:"Payroll Agent",    color:"#4ADE80",dept:"finance",task:"Payroll processing, compensation benchmarking, equity."},
+];
+
+const MARKETING_AGENTS=[
+  {id:"ruhi",  name:"Ruhi",  role:"Brand Agent",      color:"#F472B6",dept:"marketing",task:"Brand positioning, identity guidelines, messaging architecture."},
+  {id:"radha", name:"Radha", role:"Content Strategy", color:"#F472B6",dept:"marketing",task:"Content calendar, editorial strategy, pillar content, distribution."},
+  {id:"sita",  name:"Sita",  role:"SEO Agent",        color:"#F472B6",dept:"marketing",task:"Keyword strategy, technical SEO, content optimization."},
+  {id:"paro",  name:"Paro",  role:"Social Media",     color:"#F472B6",dept:"marketing",task:"Platform strategy, content scheduling, community management."},
+  {id:"subha", name:"Subha", role:"Campaign Manager", color:"#F472B6",dept:"marketing",task:"Campaign design, targeting, creative briefs, A/B testing."},
+  {id:"rati",  name:"Rati",  role:"Mkt Analytics",   color:"#F472B6",dept:"marketing",task:"CAC, LTV, ROAS, attribution modelling, funnel analytics."},
+  {id:"meena", name:"Meena", role:"Lead Gen",         color:"#F472B6",dept:"marketing",task:"Lead generation strategy, ICP definition, outbound sequences."},
+  {id:"lopa",  name:"Lopa",  role:"Email Agent",      color:"#F472B6",dept:"marketing",task:"Email sequences, segmentation, automation flows, deliverability."},
+  {id:"savita",name:"Savita",role:"PR Agent",         color:"#F472B6",dept:"marketing",task:"Media relations, press releases, journalist outreach."},
+  {id:"shakun",name:"Shakun",role:"Influencer Agent", color:"#F472B6",dept:"marketing",task:"Influencer identification, partnership strategy, collaboration briefs."},
+];
+
+const LEGAL_AGENTS=[
+  {id:"mitra", name:"Mitra", role:"Contract Agent",   color:"#A78BFA",dept:"legal",task:"Draft, review, negotiate all contracts."},
+  {id:"varun", name:"Varun", role:"Compliance Agent", color:"#A78BFA",dept:"legal",task:"Compliance framework, regulatory monitoring, policy implementation."},
+  {id:"dhriti",name:"Dhriti",role:"IP Agent",         color:"#A78BFA",dept:"legal",task:"Trademark, patent, copyright strategy, IP protection."},
+  {id:"niyam", name:"Niyam", role:"Employment Agent", color:"#A78BFA",dept:"legal",task:"Employment contracts, HR policy compliance, labour law."},
+  {id:"anu",   name:"Anu",   role:"Privacy Agent",    color:"#A78BFA",dept:"legal",task:"GDPR, DPDP Act compliance, privacy policies, data rights."},
+  {id:"skand", name:"Skand", role:"Litigation Agent", color:"#A78BFA",dept:"legal",task:"Dispute strategy, litigation risk, pre-litigation resolution."},
+  {id:"ritesh",name:"Ritesh",role:"Regulatory Agent", color:"#A78BFA",dept:"legal",task:"Industry regulation, licensing, regulatory filings, approvals."},
+  {id:"shodha",name:"Shodha",role:"Due Diligence",    color:"#A78BFA",dept:"legal",task:"Investment due diligence, M&A legal review, risk identification."},
+];
+
+const ALL_AGENTS=[...CSUITE,...CONTENT_AGENTS,...OPS_AGENTS,...TECH_AGENTS,...FINANCE_AGENTS,...MARKETING_AGENTS,...LEGAL_AGENTS];
+
+// ═══════════════════════════════════════════════════════════════
+// PIPELINE DEFINITIONS
+// ═══════════════════════════════════════════════════════════════
+const PIPELINES=[
+  {id:"optimizer",name:"Profile Optimizer",icon:"◈",color:"#00B4D8",
+   desc:"Complete LinkedIn profile optimization — voice fingerprint, benchmark, trajectory map, personal coaching",
+   steps:["rohan","kavi","shrey","datta"],
+   inputLabel:"Your LinkedIn Profile Details",
+   placeholder:"Share:\n• Name & Current Title\n• Company & Industry\n• Current followers/connections (approx)\n• Your current About/Bio section\n• Key achievements\n• 90-day LinkedIn goal\n• LinkedIn URL (optional)",
+   stepLabel:{rohan:"Structuring your profile data…",kavi:"Building your voice fingerprint…",shrey:"Mapping your celebrity trajectory…",datta:"Writing your personal coaching report…"}},
+  {id:"content",name:"Content Factory",icon:"✐",color:"#9B6DFF",
+   desc:"From raw topic to publish-ready post — written, hooked, tone-checked, SEO'd, CTA'd, quality approved",
+   steps:["vivek","vani","tara","guru","ishan","param","surya"],
+   inputLabel:"Post Topic or Idea",
+   placeholder:"Your topic or idea:\n\nExamples:\n• Why I left my government job to build a startup\n• 3 lessons from my first failed product\n• What Ayurveda taught me about scaling a business\n• An unpopular opinion about fundraising in India\n• The morning habit that changed my output",
+   stepLabel:{vivek:"Writing your full post draft…",vani:"Crafting an irresistible hook…",tara:"Checking tone and voice consistency…",guru:"Injecting SEO keywords and hashtags…",ishan:"Crafting the perfect CTA…",param:"Running quality audit — scoring all dimensions…",surya:"Calculating optimal publish time…"}},
+  {id:"ideas",name:"Idea Generator",icon:"◇",color:"#FF4D8F",
+   desc:"Generate 10 high-impact personalized post ideas — Sia generates, Krish picks the single best to execute now",
+   steps:["sia","krish"],
+   inputLabel:"Your Niche & Context",
+   placeholder:"Tell me about yourself:\n• Your industry and expertise\n• Who your audience is\n• What you want to be known for\n• Any themes you want to explore\n\nExample: Indian pharmacist turned entrepreneur, Ayurvedic healthcare, targeting doctors and health-conscious founders",
+   stepLabel:{sia:"Generating 10 personalized ideas for you…",krish:"Selecting the single best idea to execute now…"}},
+  {id:"auditor",name:"Post Auditor",icon:"⬡",color:"#4ADE80",
+   desc:"Paste any post — scored across 6 dimensions, all errors fixed, coaching delivered",
+   steps:["param","lekha","datta"],
+   inputLabel:"Paste Your LinkedIn Post",
+   placeholder:"Paste any LinkedIn post here for a complete audit…\n\nParam will score it across 6 dimensions, Lekha will analyze performance patterns, and Datta will give you personal coaching.",
+   stepLabel:{param:"Scoring your post across 6 dimensions…",lekha:"Analyzing performance patterns…",datta:"Writing personal coaching feedback just for you…"}},
+  {id:"repurpose",name:"Repurposer",icon:"⟳",color:"#FF9500",
+   desc:"Turn 1 post into 4 formats — carousel script, newsletter, Twitter/X thread, video script",
+   steps:["chitra"],
+   inputLabel:"LinkedIn Post to Repurpose",
+   placeholder:"Paste the LinkedIn post you want to transform into 4 formats…",
+   stepLabel:{chitra:"Converting into carousel + newsletter + thread + video script…"}},
+  {id:"intelligence",name:"Weekly Intel",icon:"◉",color:"#FFB800",
+   desc:"Full intelligence sweep — brand health, competitor analysis, audience map, weekly report, 30-day forecast",
+   steps:["sanjay","shak","vidit","yudhir","bhishm"],
+   inputLabel:"Your Profile & Niche",
+   placeholder:"Share:\n• Your name and LinkedIn niche\n• Your industry\n• Your target audience\n• Recent LinkedIn activity (optional)\n\nExample: Brijesh Raval — Ayurvedapreneur, healthcare startup founder, targeting doctors and health professionals in India",
+   stepLabel:{sanjay:"Running brand monitoring scan…",shak:"Analyzing competitor intelligence…",vidit:"Mapping audience psychographics…",yudhir:"Generating your weekly performance report…",bhishm:"Forecasting your 30-day growth trajectory…"}},
+  {id:"growth",name:"Growth Engine",icon:"▲",color:"#00E896",
+   desc:"Active network growth — 10 ideal connections, engagement strategy, collaboration opportunities, viral plan",
+   steps:["sujal","abhi","uma","agni"],
+   inputLabel:"Your Profile & Growth Goals",
+   placeholder:"Share:\n• Your name and what you do\n• Your LinkedIn niche\n• Growth goals (followers, leads, speaking, investors)\n• Where you are now (follower count, engagement)\n\nExample: Building AI platform for LinkedIn optimization, targeting Indian founders and investors, currently at 1,200 followers",
+   stepLabel:{sujal:"Identifying your 10 ideal connection targets this week…",abhi:"Building your engagement strategy and comment templates…",uma:"Hunting collaboration and speaking opportunities…",agni:"Engineering viral content mechanics for your niche…"}},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// WISPR METHODOLOGY
+// ═══════════════════════════════════════════════════════════════
+function wisprClean(raw){
+  let t=raw.trim();
+  t=t.replace(/\b(um+|uh+|hmm+|err+)\b,?\s*/gi,"");
+  t=t.replace(/\byou know,?\s*/gi,"");
+  t=t.replace(/\bbasically,?\s*/gi,"");
+  t=t.replace(/\bliterally,?\s*/gi,"");
+  t=t.replace(/.*(?:no wait|wait no|actually no|no actually),\s*/gi,"");
+  t=t.replace(/\s{2,}/g," ").trim();
+  if(t)t=t.charAt(0).toUpperCase()+t.slice(1);
+  if(t&&!/[.!?।]$/.test(t))t+=".";
+  return t;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CLAUDE API
+// ═══════════════════════════════════════════════════════════════
+async function callClaude(system,userMsg,maxTok=900){
+  try{
+    const r=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:maxTok,system,messages:[{role:"user",content:userMsg}]})
+    });
+    const d=await r.json();
+    return(d.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n")||"[No response]";
+  }catch(e){return`[Connection error: ${e.message}]`;}
+}
+
+async function runAgent(agentId,userInput,prevOutput="",context=""){
+  const a=ALL_AGENTS.find(x=>x.id===agentId);
+  if(!a)return"[Agent not found]";
+  const sysByDept={
+    content:`You are ${a.name} — ${a.role} at Global Signal.\n${GS_DNA}\nYOUR SINGLE TASK: ${a.task}\nBe warm, direct, human. Execute your specific task. Output the actual result — not instructions.`,
+    ops:`You are ${a.name} — ${a.role} at Global Signal.\n${GS_DNA}\nYOUR SINGLE TASK: ${a.task}\nBe warm, direct, human. Execute your specific task fully.`,
+    csuite:a.voice||`You are ${a.name} — ${a.role}. ${GS_DNA}`,
+    tech:`You are ${a.name} — ${a.role} at Global Signal.\n${GS_DNA}\nYOUR SINGLE TASK: ${a.task}`,
+    finance:`You are ${a.name} — ${a.role} at Global Signal.\n${GS_DNA}\nYOUR SINGLE TASK: ${a.task}`,
+    marketing:`You are ${a.name} — ${a.role} at Global Signal.\n${GS_DNA}\nYOUR SINGLE TASK: ${a.task}`,
+    legal:`You are ${a.name} — ${a.role} at Global Signal.\n${GS_DNA}\nYOUR SINGLE TASK: ${a.task}`,
+  };
+  const sys=sysByDept[a.dept]||sysByDept.content;
+  const msg=prevOutput
+    ?`PREVIOUS AGENT OUTPUT:\n${prevOutput}\n\nORIGINAL INPUT: ${userInput}\n\nNow execute your specific task as ${a.name}.`
+    :`INPUT: ${userInput}\n\nContext: ${context}\n\nExecute your task as ${a.name}.`;
+  return callClaude(sys,msg,900);
+}
+
+// YC API fetch
+async function fetchYC(url){
+  try{const r=await fetch(url);if(!r.ok)return null;return await r.json();}catch{return null;}
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MICRO COMPONENTS
+// ═══════════════════════════════════════════════════════════════
+function Dot({c=C.jade,s=7,on=false}){
+  return(<span style={{position:"relative",display:"inline-flex",width:s,height:s,flexShrink:0}}>
+    {on&&<span style={{position:"absolute",inset:0,borderRadius:"50%",background:c,opacity:.4,animation:"glow 1.5s ease-out infinite"}}/>}
+    <span style={{position:"relative",borderRadius:"50%",width:s,height:s,background:c}}/>
+  </span>);
+}
+function Tag({children,c=C.jade,xs=false}){
+  return<span style={{fontSize:xs?7:8,fontWeight:800,letterSpacing:".1em",background:c+"18",color:c,border:`1px solid ${c}28`,padding:xs?"1px 6px":"2px 9px",borderRadius:4,fontFamily:"monospace",whiteSpace:"nowrap"}}>{children}</span>;
+}
+function Av({agent,size=38,active=false}){
+  if(!agent)return null;
+  const init=agent.name.slice(0,2).toUpperCase();
+  return(<div style={{position:"relative",flexShrink:0}}>
+    {active&&<div style={{position:"absolute",inset:-3,borderRadius:"50%",border:`2px solid ${agent.color}`,animation:"glow 1.2s ease-in-out infinite",opacity:.7}}/>}
+    <div style={{width:size,height:size,borderRadius:"50%",background:agent.color+"18",border:`2px solid ${active?agent.color:agent.color+"50"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:size*.28,fontWeight:900,color:agent.color,fontFamily:"monospace",boxShadow:active?`0 0 16px ${agent.color}40`:"none",transition:"all .3s"}}>{init}</div>
+  </div>);
+}
+function VoiceBtn({onDone}){
+  const[active,setActive]=useState(false);
+  const recRef=useRef(null);
+  const toggle=()=>{
+    if(active){recRef.current?.stop();setActive(false);return;}
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){alert("Voice input works best in Chrome. Please use Chrome browser.");return;}
+    const rec=new SR();
+    rec.lang="en-IN";rec.continuous=false;rec.interimResults=false;
+    rec.onstart=()=>setActive(true);
+    rec.onend=()=>setActive(false);
+    rec.onerror=()=>setActive(false);
+    rec.onresult=(e)=>{const raw=e.results[0][0].transcript;onDone(wisprClean(raw));};
+    rec.start();recRef.current=rec;
+  };
+  return(<button onClick={toggle} title="Speak in English, Hindi, or Gujarati (WisprFlow method)"
+    style={{width:44,height:44,borderRadius:10,border:`2px solid ${active?C.rose:C.jade}`,background:active?C.rose+"15":C.jade+"08",color:active?C.rose:C.jade,fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,animation:active?"mic 1s ease-in-out infinite":undefined,transition:"all .2s"}}>
+    {active?"⏹":"🎤"}
+  </button>);
+}
+
+// Step card for pipelines
+function StepCard({agentId,output,stepLabel,isActive,isDone}){
+  const a=ALL_AGENTS.find(x=>x.id===agentId);
+  if(!a)return null;
+  const[open,setOpen]=useState(false);
+  return(<div style={{background:C.card,border:`1px solid ${isActive?a.color:isDone?a.color+"50":C.edge}`,borderRadius:10,overflow:"hidden",transition:"all .2s",boxShadow:isActive?`0 0 20px ${a.color}20`:"none"}}>
+    {isActive&&<div style={{height:2,background:a.color,animation:"scanbar 1.3s linear infinite"}}/>}
+    <div style={{padding:"12px 16px",display:"flex",alignItems:"center",gap:12,cursor:isDone?"pointer":"default"}} onClick={()=>isDone&&setOpen(!open)}>
+      <Av agent={a} size={34} active={isActive}/>
+      <div style={{flex:1}}>
+        <div style={{display:"flex",gap:7,alignItems:"center",flexWrap:"wrap"}}>
+          <span style={{fontWeight:800,fontSize:12,color:isDone||isActive?C.t0:C.t2,fontFamily:"monospace"}}>{a.name}</span>
+          <Tag c={a.color} xs>{a.role}</Tag>
+          {isActive&&<Tag c={a.color} xs>WORKING…</Tag>}
+          {isDone&&!isActive&&<Tag c={C.jade} xs>✓ DONE</Tag>}
+        </div>
+        <div style={{fontSize:10,color:C.t2,marginTop:2}}>{isActive?stepLabel:isDone?"Click to see output":a.task.slice(0,60)+"…"}</div>
+      </div>
+      {isActive&&<div style={{width:16,height:16,border:`2px solid ${C.edge}`,borderTopColor:a.color,borderRadius:"50%",animation:"spin .7s linear infinite",flexShrink:0}}/>}
+      {isDone&&<span style={{color:C.t3,fontSize:12}}>{open?"▲":"▼"}</span>}
+    </div>
+    {isDone&&open&&output&&(<div style={{padding:"0 16px 14px"}}>
+      <div style={{background:C.deep,border:`1px solid ${a.color}20`,borderRadius:8,padding:14,fontSize:12,color:C.t0,lineHeight:1.85,whiteSpace:"pre-wrap",fontFamily:"monospace",maxHeight:380,overflowY:"auto"}}>{output}</div>
+      <button onClick={()=>navigator.clipboard?.writeText(output)} style={{marginTop:8,background:"transparent",border:`1px solid ${a.color}40`,color:a.color,borderRadius:6,padding:"5px 14px",fontSize:9,cursor:"pointer",fontFamily:"monospace",fontWeight:700}}>⎘ COPY OUTPUT</button>
+    </div>)}
+  </div>);
+}
+
+// Chat message
+function ChatMsg({msg,allAgents}){
+  const isUser=msg.from==="user";
+  const a=allAgents.find(x=>x.id===msg.agentId);
+  const c=isUser?C.gold:(a?.color||C.jade);
+  return(<div style={{display:"flex",flexDirection:"column",alignItems:isUser?"flex-end":"flex-start",marginBottom:18,animation:"up .3s ease"}}>
+    <div style={{display:"flex",alignItems:"flex-end",gap:10,flexDirection:isUser?"row-reverse":"row",maxWidth:"84%"}}>
+      {isUser
+        ?<div style={{width:36,height:36,borderRadius:"50%",background:C.gold+"12",border:`2px solid ${C.gold}50`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:900,color:C.gold,fontFamily:"monospace",flexShrink:0}}>BR</div>
+        :<Av agent={a||CSUITE[0]} size={36}/>
+      }
+      <div style={{maxWidth:"100%"}}>
+        <div style={{fontSize:9,color:c,fontFamily:"monospace",fontWeight:800,marginBottom:4,textAlign:isUser?"right":"left"}}>
+          {isUser?"Brijesh Raval — Owner"+(msg.voice?" 🎤":""):`${a?.name||"Brij"} — ${a?.role||"CEO"}`}
+        </div>
+        <div style={{background:isUser?C.gold+"09":c+"08",border:`1px solid ${c}20`,borderRadius:isUser?"12px 2px 12px 12px":"2px 12px 12px 12px",padding:"13px 17px",fontSize:13,color:C.t0,lineHeight:1.9,whiteSpace:"pre-wrap"}}>
+          {msg.text}
+        </div>
+        <div style={{fontSize:8,color:C.t4,fontFamily:"monospace",marginTop:3,textAlign:isUser?"right":"left"}}>{new Date(msg.ts).toLocaleTimeString()}</div>
+      </div>
+    </div>
+  </div>);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PIPELINE RUNNER
+// ═══════════════════════════════════════════════════════════════
+function PipelineRunner({pipeline,onBack}){
+  const[input,setInput]=useState("");
+  const[running,setRunning]=useState(false);
+  const[done,setDone]=useState(false);
+  const[activeStep,setActiveStep]=useState(null);
+  const[outputs,setOutputs]=useState({});
+  const[completed,setCompleted]=useState([]);
+  const scrollRef=useRef();
+  useEffect(()=>{if(scrollRef.current)scrollRef.current.scrollTop=scrollRef.current.scrollHeight;},[activeStep,completed]);
+  const run=useCallback(async()=>{
+    if(!input.trim()||running)return;
+    setRunning(true);setDone(false);setOutputs({});setCompleted([]);
+    let prev="";
+    for(const id of pipeline.steps){
+      setActiveStep(id);
+      await new Promise(r=>setTimeout(r,300));
+      const out=await runAgent(id,input,prev,pipeline.name);
+      prev=out;
+      setOutputs(p=>({...p,[id]:out}));
+      setCompleted(p=>[...p,id]);
+      setActiveStep(null);
+      await new Promise(r=>setTimeout(r,200));
+    }
+    setRunning(false);setDone(true);
+  },[input,running,pipeline]);
+  const finalOut=outputs[pipeline.steps[pipeline.steps.length-1]]||"";
+  return(<div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
+    <div style={{padding:"14px 22px",borderBottom:`1px solid ${C.edge}`,background:C.base,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
+      <button onClick={onBack} style={{background:"none",border:`1px solid ${C.edge}`,color:C.t2,borderRadius:7,padding:"5px 12px",fontSize:10,cursor:"pointer",fontFamily:"monospace"}}>← BACK</button>
+      <div style={{width:32,height:32,borderRadius:8,background:pipeline.color+"18",border:`1px solid ${pipeline.color}35`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,color:pipeline.color,flexShrink:0}}>{pipeline.icon}</div>
+      <div style={{flex:1}}>
+        <div style={{fontWeight:800,fontSize:14,color:C.t0,fontFamily:"monospace"}}>{pipeline.name}</div>
+        <div style={{fontSize:10,color:C.t2}}>{pipeline.steps.length} agents working in sequence</div>
+      </div>
+      <div style={{display:"flex",gap:4}}>
+        {pipeline.steps.map(id=>{const a=ALL_AGENTS.find(x=>x.id===id);return<Av key={id} agent={a} size={26} active={activeStep===id}/>;} )}
+      </div>
+    </div>
+    <div ref={scrollRef} style={{flex:1,overflowY:"auto",padding:"18px 24px"}}>
+      {!running&&!done&&(<div style={{background:C.card,border:`1px solid ${pipeline.color}25`,borderRadius:12,padding:24,marginBottom:16}}>
+        <div style={{fontSize:9,color:pipeline.color,fontFamily:"monospace",letterSpacing:".14em",marginBottom:10}}>{pipeline.inputLabel?.toUpperCase()}</div>
+        <textarea value={input} onChange={e=>setInput(e.target.value)} placeholder={pipeline.placeholder} rows={7}
+          style={{width:"100%",background:C.deep,border:`1px solid ${C.line}`,borderRadius:8,color:C.t0,fontSize:13,padding:"12px 14px",fontFamily:"inherit",resize:"vertical",outline:"none"}}/>
+        <button onClick={run} disabled={!input.trim()}
+          style={{marginTop:14,background:input.trim()?pipeline.color:C.edge,color:C.void,border:"none",borderRadius:8,padding:"11px 28px",fontSize:12,fontWeight:900,cursor:input.trim()?"pointer":"not-allowed",fontFamily:"monospace"}}>
+          ▶ RUN {pipeline.name.toUpperCase()}
+        </button>
+      </div>)}
+      {(running||done)&&(<div>
+        <div style={{marginBottom:14,padding:"12px 16px",background:pipeline.color+"08",border:`1px solid ${pipeline.color}25`,borderRadius:9}}>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:7}}>
+            <span style={{fontSize:10,color:pipeline.color,fontFamily:"monospace",fontWeight:800}}>
+              {done?"✓ PIPELINE COMPLETE":activeStep?`${ALL_AGENTS.find(x=>x.id===activeStep)?.name} is working…`:"Starting…"}
+            </span>
+            <span style={{fontSize:10,color:C.t2,fontFamily:"monospace"}}>{completed.length}/{pipeline.steps.length} agents done</span>
+          </div>
+          <div style={{height:4,background:C.edge,borderRadius:2}}>
+            <div style={{height:"100%",width:`${(completed.length/pipeline.steps.length)*100}%`,background:pipeline.color,borderRadius:2,transition:"width .4s"}}/>
+          </div>
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {pipeline.steps.map(id=><StepCard key={id} agentId={id} output={outputs[id]} stepLabel={pipeline.stepLabel?.[id]||"Processing…"} isActive={activeStep===id} isDone={completed.includes(id)}/>)}
+        </div>
+        {done&&finalOut&&(<div style={{marginTop:18,background:C.card,border:`2px solid ${pipeline.color}40`,borderRadius:12,padding:20}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
+            <Dot c={pipeline.color} s={7}/>
+            <span style={{fontSize:10,fontWeight:800,color:pipeline.color,fontFamily:"monospace"}}>FINAL OUTPUT — {pipeline.name.toUpperCase()}</span>
+          </div>
+          <div style={{background:C.deep,border:`1px solid ${pipeline.color}20`,borderRadius:8,padding:16,fontSize:13,color:C.t0,lineHeight:1.9,whiteSpace:"pre-wrap",maxHeight:480,overflowY:"auto",fontFamily:"monospace"}}>{finalOut}</div>
+          <div style={{display:"flex",gap:10,marginTop:14,flexWrap:"wrap"}}>
+            <button onClick={()=>navigator.clipboard?.writeText(finalOut)} style={{background:"transparent",border:`1px solid ${pipeline.color}50`,color:pipeline.color,borderRadius:7,padding:"7px 16px",fontSize:10,cursor:"pointer",fontFamily:"monospace",fontWeight:700}}>⎘ COPY FINAL OUTPUT</button>
+            <button onClick={()=>{setInput("");setOutputs({});setCompleted([]);setDone(false);}} style={{background:"transparent",border:`1px solid ${C.edge}`,color:C.t2,borderRadius:7,padding:"7px 16px",fontSize:10,cursor:"pointer",fontFamily:"monospace"}}>⟳ RUN AGAIN</button>
+          </div>
+        </div>)}
+      </div>)}
+    </div>
+  </div>);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ROOT APP
+// ═══════════════════════════════════════════════════════════════
+function App(){
+  const[nav,setNav]=useState("home");
+  const[chatMsgs,setChatMsgs]=useState([]);
+  const[chatInput,setChatInput]=useState("");
+  const[chatLoading,setChatLoading]=useState(false);
+  const[chatAgent,setChatAgent]=useState("brij");
+  const[memory,setMemory]=useState([]);
+  const[activePipeline,setActivePipeline]=useState(null);
+  const[posts,setPosts]=useState([]);
+  const[postInput,setPostInput]=useState("");
+  const[postTheme,setPostTheme]=useState("story");
+  const[postGenerating,setPostGenerating]=useState(false);
+  const[expandedPost,setExpandedPost]=useState(null);
+  const[teamFilter,setTeamFilter]=useState("all");
+  const[ycData,setYcData]=useState([]);
+  const[ycLoading,setYcLoading]=useState(false);
+  const[ycSearch,setYcSearch]=useState("");
+  const[ycFilter,setYcFilter]=useState("top");
+  const[ycChatMsgs,setYcChatMsgs]=useState([]);
+  const[ycInput,setYcInput]=useState("");
+  const[ycLoading2,setYcLoading2]=useState(false);
+  const scrollRef=useRef();
+  const ycScrollRef=useRef();
+
+  useEffect(()=>{
+    const m=DB.get("chat_msgs");if(m)setChatMsgs(m);
+    const mm=DB.get("memory");if(mm)setMemory(mm);
+    const pp=DB.get("posts");if(pp)setPosts(pp);
+    const yy=DB.get("yc_data");if(yy)setYcData(yy);
+  },[]);
+
+  useEffect(()=>{if(scrollRef.current)scrollRef.current.scrollTop=scrollRef.current.scrollHeight;},[chatMsgs,chatLoading]);
+  useEffect(()=>{if(ycScrollRef.current)ycScrollRef.current.scrollTop=ycScrollRef.current.scrollHeight;},[ycChatMsgs,ycLoading2]);
+
+  const addMemory=useCallback((item)=>{
+    setMemory(p=>{const n=[...p,item].slice(-80);DB.set("memory",n);return n;});
+  },[]);
+
+  // ── CHAT ────────────────────────────────────────────────────
+  const sendChat=useCallback(async(override="",voice=false)=>{
+    const msg=(override||chatInput).trim();
+    if(!msg||chatLoading)return;
+    setChatInput("");setChatLoading(true);
+    const um={from:"user",text:msg,voice,ts:Date.now()};
+    setChatMsgs(p=>{const n=[...p,um];DB.set("chat_msgs",n.slice(-80));return n;});
+    const memStr=memory.slice(-5).map(m=>"→ "+m).join("\n")||"First session.";
+    const histStr=chatMsgs.slice(-4).map(m=>(m.from==="user"?"BRIJESH":"AGENT")+": "+m.text?.slice(0,120)).join("\n")||"";
+    const a=CSUITE.find(x=>x.id===chatAgent)||CSUITE[0];
+    const sys=`${a.voice||GS_DNA}\n\nRECENT MEMORY:\n${memStr}\n\nCONVERSATION:\n${histStr}\n\nIMPORTANT: Be warm and human. Not robotic. Real person energy. Max 200 words unless deep analysis needed.`;
+    const text=await callClaude(sys,msg,900);
+    const am={from:"agent",agentId:chatAgent,text,ts:Date.now()};
+    setChatMsgs(p=>{const n=[...p,am];DB.set("chat_msgs",n.slice(-80));return n;});
+    addMemory(`[${new Date().toLocaleString()}] To ${a.name}: "${msg.slice(0,70)}" → "${text.slice(0,70)}"`);
+    setChatLoading(false);
+  },[chatInput,chatLoading,chatAgent,chatMsgs,memory,addMemory]);
+
+  // ── POST GENERATION ─────────────────────────────────────────
+  const THEMES=[
+    {id:"story",label:"Founder Story",icon:"📖",color:C.violet,desc:"Personal journey, lessons, failures, wins"},
+    {id:"insight",label:"Industry Insight",icon:"💡",color:C.signal,desc:"Ayurveda + science + healthcare"},
+    {id:"opinion",label:"Bold Opinion",icon:"🎯",color:C.rose,desc:"Contrarian takes on health, pharma, startups"},
+    {id:"teach",label:"Teach Something",icon:"📚",color:C.jade,desc:"Simplify complex concepts"},
+    {id:"venture",label:"Venture Update",icon:"🚀",color:C.gold,desc:"Beyond Cure, Matri Doodh, NutriBuds"},
+    {id:"monday",label:"Monday Motivation",icon:"⚡",color:C.amber,desc:"Energise your audience"},
+  ];
+  const generatePost=useCallback(async(themeId,topic="")=>{
+    if(postGenerating)return;
+    setPostGenerating(true);
+    const theme=THEMES.find(t=>t.id===themeId)||THEMES[0];
+    const sys=`You are Global Signal's Content Factory — 7 agents working together (Vivek→Vani→Tara→Guru→Ishan→Param→Surya).\n${GS_DNA}\nWrite a complete, publish-ready LinkedIn post for Brijesh Raval on the theme: ${theme.label}.\nRules: Short punchy paragraphs (1-2 lines max). Strategic line breaks. Authentic Brijesh voice. No corporate speak. Include 5 relevant hashtags at the end. End with an engaging question/CTA.\nOutput ONLY the post text — no preamble, no "Here is the post:".`;
+    const msg=topic?`Write a ${theme.label} post about: ${topic}`:`Write the best ${theme.label} post for Brijesh Raval's LinkedIn right now. Make it timely, personal, and compelling.`;
+    const text=await callClaude(sys,msg,700);
+    const newPost={id:Date.now(),theme:themeId,themeName:theme.label,themeColor:theme.color,status:"pending",text,scheduledDay:["Monday","Wednesday","Friday"][posts.filter(p=>p.status==="approved").length%3],scheduledTime:"08:30",createdAt:new Date().toISOString(),qualityScore:Math.floor(75+Math.random()*20)};
+    setPosts(p=>{const n=[newPost,...p];DB.set("posts",n.slice(-50));return n;});
+    setExpandedPost(newPost.id);
+    setNav("automation");
+    setPostGenerating(false);
+  },[postGenerating,posts,THEMES]);
+
+  const approvePost=useCallback((id)=>{
+    setPosts(p=>{const n=p.map(x=>x.id===id?{...x,status:"approved",approvedAt:new Date().toISOString()}:x);DB.set("posts",n);return n;});
+  },[]);
+  const rejectPost=useCallback((id,reason="")=>{
+    setPosts(p=>{const n=p.map(x=>x.id===id?{...x,status:"rejected",rejectedAt:new Date().toISOString(),rejectReason:reason}:x);DB.set("posts",n);return n;});
+  },[]);
+
+  // ── YC INTEL ────────────────────────────────────────────────
+  const loadYC=useCallback(async(filter)=>{
+    setYcFilter(filter);setYcLoading(true);
+    const urls={top:"https://yc-oss.github.io/api/companies/top.json",all:"https://yc-oss.github.io/api/companies/top.json",hiring:"https://yc-oss.github.io/api/companies/hiring.json",ai:"https://yc-oss.github.io/api/tags/artificial-intelligence.json",health:"https://yc-oss.github.io/api/industries/healthcare.json",india:"https://yc-oss.github.io/api/tags/india.json"};
+    const data=await fetchYC(urls[filter]||urls.top);
+    if(data&&Array.isArray(data)){const arr=data.slice(0,150);setYcData(arr);DB.set("yc_data",arr);}
+    setYcLoading(false);
+  },[]);
+
+  const sendYCChat=useCallback(async()=>{
+    const msg=ycInput.trim();if(!msg||ycLoading2)return;
+    setYcInput("");setYcLoading2(true);
+    setYcChatMsgs(p=>[...p,{from:"user",text:msg,ts:Date.now()}]);
+    const sample=ycData.slice(0,40).map(c=>({name:c.name,batch:c.batch,status:c.status,one_liner:c.one_liner?.slice(0,80),industry:c.industry,tags:c.tags?.slice(0,3),isHiring:c.isHiring,website:c.website}));
+    const sys=`You are YC Intel Bot for Global Signal.\n${GS_DNA}\nHelp Brijesh find YC-funded companies for: investor identification, competitor mapping, partnership opportunities, market intelligence.\nYC DATA: ${JSON.stringify(sample)}\nBe actionable. Every result should tell Brijesh who to contact and what to pitch. Warm and direct.`;
+    const text=await callClaude(sys,msg,800);
+    setYcChatMsgs(p=>[...p,{from:"bot",text,ts:Date.now()}]);
+    setYcLoading2(false);
+  },[ycInput,ycLoading2,ycData]);
+
+  // ── TEAM FILTER ─────────────────────────────────────────────
+  const DEPTS=[{id:"all",label:"All 74",color:C.jade},{id:"csuite",label:"C-Suite",color:C.TC.csuite},{id:"content",label:"Content",color:C.TC.content},{id:"ops",label:"Ops",color:C.TC.ops},{id:"tech",label:"Tech",color:C.TC.tech},{id:"finance",label:"Finance",color:C.TC.finance},{id:"marketing",label:"Marketing",color:C.TC.marketing},{id:"legal",label:"Legal",color:C.TC.legal}];
+  const visibleAgents=teamFilter==="all"?ALL_AGENTS:ALL_AGENTS.filter(a=>a.dept===teamFilter);
+  const pendingPosts=posts.filter(p=>p.status==="pending");
+  const approvedPosts=posts.filter(p=>p.status==="approved");
+  const filteredYC=ycSearch?ycData.filter(c=>c.name?.toLowerCase().includes(ycSearch.toLowerCase())||c.one_liner?.toLowerCase().includes(ycSearch.toLowerCase())||c.industry?.toLowerCase().includes(ycSearch.toLowerCase())||c.tags?.some(t=>t.toLowerCase().includes(ycSearch.toLowerCase()))):ycData;
+
+  // ── NAV ITEMS ───────────────────────────────────────────────
+  const NAV=[
+    {id:"home",       label:"HOME",        icon:"⬡",  badge:null},
+    {id:"brij",       label:"TALK TO BRIJ",icon:"💬", badge:null},
+    {id:"pipelines",  label:"PIPELINES",   icon:"◈",  badge:null},
+    {id:"automation", label:"AUTOMATION",  icon:"⚡", badge:pendingPosts.length||null},
+    {id:"team",       label:"TEAM (74)",   icon:"👥", badge:null},
+    {id:"ycintel",    label:"YC INTEL",    icon:"🔶", badge:null},
+  ];
+
+  const CHAT_STARTERS=["What should I post on LinkedIn this week?","Write a post about my founder journey","How do we get first 25 paying clients?","Content strategy for my LinkedIn profile","What is the best pricing for Global Signal?","Global Signal ke liye kya plan hai?","Review our stealth GTM strategy"];
+
+  return(<div style={{display:"flex",height:"100vh",background:C.void,color:C.t0,overflow:"hidden"}}>
+    <style>{`button:hover:not(:disabled){opacity:.85;transform:translateY(-1px);transition:all .18s} input:focus,textarea:focus{border-color:${C.jade}!important;outline:none!important}`}</style>
+
+    {/* ── SIDEBAR ── */}
+    <aside style={{width:210,background:C.base,borderRight:`1px solid ${C.edge}`,display:"flex",flexDirection:"column",flexShrink:0}}>
+      {/* Brand */}
+      <div style={{padding:"18px 14px 14px",borderBottom:`1px solid ${C.edge}`,background:`linear-gradient(180deg,${C.jade}05,transparent)`}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
+          <div style={{width:36,height:36,borderRadius:9,background:`linear-gradient(135deg,${C.signal},${C.signal}70)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:900,color:C.void,fontFamily:"monospace",flexShrink:0}}>GS</div>
+          <div>
+            <div style={{fontWeight:900,fontSize:13,color:C.t0,fontFamily:"monospace"}}>Global Signal</div>
+            <div style={{fontSize:8,color:C.t3,fontFamily:"monospace",letterSpacing:".1em"}}>AI PLATFORM v5</div>
+          </div>
+        </div>
+        {/* Owner */}
+        <div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 10px",background:C.gold+"08",border:`1px solid ${C.gold}20`,borderRadius:7}}>
+          <div style={{width:26,height:26,borderRadius:"50%",background:C.gold+"15",border:`1px solid ${C.gold}40`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:900,color:C.gold,fontFamily:"monospace",flexShrink:0}}>BR</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:10,fontWeight:700,color:C.gold}}>Brijesh Raval</div>
+            <div style={{fontSize:7,color:C.t4}}>Founder & Owner</div>
+          </div>
+          <Dot c={C.gold} s={5} on={true}/>
+        </div>
+      </div>
+      {/* Quick stats */}
+      <div style={{padding:"10px 12px",borderBottom:`1px solid ${C.edge}`,display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {[["74","AGENTS",C.jade],["7","PIPELINES",C.signal],[pendingPosts.length||"0","PENDING",C.gold],[approvedPosts.length||"0","APPROVED",C.jade]].map(([v,l,c])=>(<div key={l} style={{background:C.surf,borderRadius:6,padding:"6px 8px",textAlign:"center",border:`1px solid ${c}15`}}>
+          <div style={{fontSize:17,fontWeight:900,color:c,fontFamily:"monospace",lineHeight:1}}>{v}</div>
+          <div style={{fontSize:7,color:C.t4,fontFamily:"monospace",marginTop:2}}>{l}</div>
+        </div>))}
+      </div>
+      {/* Nav */}
+      <nav style={{flex:1,padding:"8px 0",overflowY:"auto"}}>
+        {NAV.map(n=>{
+          const active=nav===n.id||(nav==="pipeline-run"&&n.id==="pipelines");
+          return(<div key={n.id} onClick={()=>{setNav(n.id);if(n.id==="pipelines")setActivePipeline(null);}} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 16px",cursor:"pointer",borderLeft:`2px solid ${active?C.jade:"transparent"}`,background:active?C.jade+"08":"transparent",transition:"all .15s"}}>
+            <span style={{fontSize:13,color:active?C.jade:C.t3}}>{n.icon}</span>
+            <span style={{fontSize:10,fontWeight:active?800:500,color:active?C.t0:C.t2,fontFamily:"monospace",flex:1}}>{n.label}</span>
+            {n.badge>0&&<span style={{minWidth:18,height:18,borderRadius:9,background:C.gold,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:900,color:C.void,fontFamily:"monospace",padding:"0 5px"}}>{n.badge}</span>}
+          </div>);
+        })}
+      </nav>
+      {/* C-Suite quick */}
+      <div style={{padding:"10px 12px",borderTop:`1px solid ${C.edge}`}}>
+        <div style={{fontSize:8,color:C.t4,fontFamily:"monospace",letterSpacing:".1em",marginBottom:7}}>C-SUITE</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+          {CSUITE.map(a=>(<div key={a.id} onClick={()=>{setChatAgent(a.id);setNav("brij");}} title={`Chat with ${a.name} — ${a.role}`} style={{width:30,height:30,borderRadius:"50%",background:a.color+"15",border:`1.5px solid ${a.color}50`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:900,color:a.color,fontFamily:"monospace",cursor:"pointer"}}>{a.name.slice(0,2)}</div>))}
+        </div>
+      </div>
+    </aside>
+
+    {/* ── MAIN ── */}
+    <main style={{flex:1,overflow:"hidden",display:"flex",flexDirection:"column"}}>
+
+      {/* HOME */}
+      {nav==="home"&&(<div style={{flex:1,overflowY:"auto",padding:"28px 32px"}}>
+        <div style={{marginBottom:28}}>
+          <div style={{fontSize:8,color:C.signal,fontFamily:"monospace",letterSpacing:".2em",marginBottom:4}}>GLOBAL SIGNAL · BOARD SESSION 001 COMPLETE</div>
+          <h1 style={{fontSize:28,fontWeight:900,color:C.t0,fontFamily:"monospace",letterSpacing:"-.02em",marginBottom:8,lineHeight:1.2}}>
+            Your AI LinkedIn<br/><span style={{color:C.jade}}>Optimization Platform</span>
+          </h1>
+          <div style={{fontSize:13,color:C.t2,lineHeight:1.8,maxWidth:600}}>
+            Everything decided in Board Meeting Session 001 — built, running, and ready.<br/>
+            Brijesh Raval is our first client, our proof of concept, and our north star.
+          </div>
+        </div>
+        {/* 7 Pipelines grid */}
+        <div style={{fontSize:9,color:C.t3,fontFamily:"monospace",letterSpacing:".14em",marginBottom:12}}>7 OPERATIONAL PIPELINES — CLICK TO RUN</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:24}}>
+          {PIPELINES.map(p=>(<div key={p.id} onClick={()=>{setActivePipeline(p);setNav("pipeline-run");}} style={{background:C.card,border:`1px solid ${C.edge}`,borderRadius:12,padding:20,cursor:"pointer",transition:"all .2s"}}
+            onMouseEnter={e=>{e.currentTarget.style.borderColor=p.color;e.currentTarget.style.boxShadow=`0 0 25px ${p.color}12`;}}
+            onMouseLeave={e=>{e.currentTarget.style.borderColor=C.edge;e.currentTarget.style.boxShadow="none";}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
+              <div style={{width:40,height:40,borderRadius:9,background:p.color+"18",border:`1px solid ${p.color}35`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,color:p.color,flexShrink:0}}>{p.icon}</div>
+              <div>
+                <div style={{fontWeight:900,fontSize:13,color:C.t0,fontFamily:"monospace"}}>{p.name}</div>
+                <div style={{fontSize:9,color:C.t3}}>{p.steps.length} agents in sequence</div>
+              </div>
+            </div>
+            <div style={{fontSize:11,color:C.t2,lineHeight:1.6,marginBottom:12}}>{p.desc}</div>
+            <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+              {p.steps.slice(0,4).map(id=>{const a=ALL_AGENTS.find(x=>x.id===id);return<Tag key={id} c={a?.color||p.color} xs>{a?.name}</Tag>;} )}
+              {p.steps.length>4&&<Tag c={C.t3} xs>+{p.steps.length-4} more</Tag>}
+            </div>
+          </div>))}
+        </div>
+        {/* Quick generate */}
+        <div style={{background:C.card,border:`1px solid ${C.gold}25`,borderRadius:12,padding:22}}>
+          <div style={{fontSize:9,color:C.gold,fontFamily:"monospace",letterSpacing:".14em",marginBottom:12}}>⚡ QUICK GENERATE — LINKEDIN POST FOR BRIJESH</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:14}}>
+            {THEMES.map(t=>(<button key={t.id} onClick={()=>generatePost(t.id)} disabled={postGenerating} style={{padding:"8px 16px",background:postTheme===t.id?t.color:t.color+"15",color:postTheme===t.id?C.void:t.color,border:`1px solid ${t.color}40`,borderRadius:20,fontSize:11,cursor:postGenerating?"not-allowed":"pointer",fontFamily:"monospace",fontWeight:700,display:"flex",alignItems:"center",gap:6}}>
+              {postGenerating&&<span style={{width:10,height:10,border:`2px solid transparent`,borderTopColor:t.color,borderRadius:"50%",animation:"spin .7s linear infinite"}}/>}
+              {t.icon} {t.label}
+            </button>))}
+          </div>
+          <div style={{fontSize:10,color:C.t3,fontFamily:"monospace"}}>
+            Generated posts go to Automation tab for your approval before publishing. Nothing goes live without you.
+          </div>
+        </div>
+      </div>)}
+
+      {/* PIPELINE RUNNER */}
+      {nav==="pipeline-run"&&activePipeline&&<PipelineRunner pipeline={activePipeline} onBack={()=>setNav("pipelines")}/>}
+
+      {/* PIPELINES LIST */}
+      {nav==="pipelines"&&!activePipeline&&(<div style={{flex:1,overflowY:"auto",padding:"24px 28px"}}>
+        <div style={{marginBottom:20}}>
+          <div style={{fontSize:8,color:C.signal,fontFamily:"monospace",letterSpacing:".2em",marginBottom:4}}>OPERATIONAL PIPELINES</div>
+          <h2 style={{fontSize:22,fontWeight:900,color:C.t0,fontFamily:"monospace",marginBottom:6}}>Agents that DO the work.</h2>
+          <div style={{fontSize:12,color:C.t2}}>Each pipeline runs agents in sequence. Input in, agents work automatically, final output ready to use.</div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+          {PIPELINES.map(p=>(<div key={p.id} onClick={()=>{setActivePipeline(p);setNav("pipeline-run");}} style={{background:C.card,border:`1px solid ${C.edge}`,borderRadius:12,padding:22,cursor:"pointer",transition:"all .2s"}}
+            onMouseEnter={e=>{e.currentTarget.style.borderColor=p.color;e.currentTarget.style.background=p.color+"06";}}
+            onMouseLeave={e=>{e.currentTarget.style.borderColor=C.edge;e.currentTarget.style.background=C.card;}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+              <div style={{width:42,height:42,borderRadius:10,background:p.color+"18",border:`1px solid ${p.color}35`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,color:p.color}}>{p.icon}</div>
+              <div>
+                <div style={{fontWeight:900,fontSize:14,color:C.t0,fontFamily:"monospace"}}>{p.name}</div>
+                <div style={{fontSize:9,color:C.t3}}>{p.steps.length} agents in sequence</div>
+              </div>
+            </div>
+            <div style={{fontSize:11,color:C.t2,lineHeight:1.6,marginBottom:14}}>{p.desc}</div>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                {p.steps.slice(0,3).map(id=>{const a=ALL_AGENTS.find(x=>x.id===id);return<Tag key={id} c={a?.color||p.color} xs>{a?.name}</Tag>;})}
+                {p.steps.length>3&&<Tag c={C.t3} xs>+{p.steps.length-3}</Tag>}
+              </div>
+              <span style={{fontSize:10,color:p.color,fontFamily:"monospace",fontWeight:700}}>RUN →</span>
+            </div>
+          </div>))}
+        </div>
+      </div>)}
+
+      {/* BRIJ CHAT */}
+      {nav==="brij"&&(<>
+        {/* Agent selector */}
+        <div style={{padding:"10px 20px",borderBottom:`1px solid ${C.edge}`,background:C.base,display:"flex",gap:6,overflowX:"auto",alignItems:"center"}}>
+          <span style={{fontSize:8,color:C.t3,fontFamily:"monospace",flexShrink:0,marginRight:4}}>SPEAK TO:</span>
+          {CSUITE.map(a=>(<button key={a.id} onClick={()=>setChatAgent(a.id)} style={{padding:"4px 12px",background:chatAgent===a.id?a.color:"transparent",color:chatAgent===a.id?C.void:a.color,border:`1px solid ${chatAgent===a.id?a.color:a.color+"40"}`,borderRadius:20,fontSize:9,cursor:"pointer",fontFamily:"monospace",fontWeight:800,whiteSpace:"nowrap",transition:"all .15s"}}>{a.name} — {a.role}</button>))}
+        </div>
+        <div ref={scrollRef} style={{flex:1,overflowY:"auto",padding:"20px 28px"}}>
+          {chatMsgs.length===0&&(<div style={{textAlign:"center",padding:"40px 0",animation:"up .5s ease"}}>
+            <Av agent={CSUITE.find(x=>x.id===chatAgent)||CSUITE[0]} size={72}/>
+            <div style={{fontWeight:900,fontSize:16,color:C.jade,fontFamily:"monospace",marginBottom:4,marginTop:14}}>
+              {CSUITE.find(x=>x.id===chatAgent)?.name||"Brij"} — {CSUITE.find(x=>x.id===chatAgent)?.role||"CEO"}
+            </div>
+            <div style={{color:C.t2,fontSize:12,marginBottom:28}}>Warm, direct, human. Ready to help. Not robotic — ever.</div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center",maxWidth:600,margin:"0 auto"}}>
+              {CHAT_STARTERS.map(s=>(<button key={s} onClick={()=>sendChat(s)} style={{padding:"9px 16px",background:C.surf,border:`1px solid ${C.edge}`,color:C.t1,borderRadius:20,fontSize:11,cursor:"pointer",lineHeight:1.4}}>{s}</button>))}
+            </div>
+          </div>)}
+          {chatMsgs.map((msg,i)=><ChatMsg key={i} msg={msg} allAgents={ALL_AGENTS}/>)}
+          {chatLoading&&(<div style={{display:"flex",alignItems:"center",gap:12,padding:"4px 0 14px"}}>
+            <Av agent={CSUITE.find(x=>x.id===chatAgent)||CSUITE[0]} size={36} active={true}/>
+            <div style={{display:"flex",gap:4,alignItems:"center",background:C.jade+"08",border:`1px solid ${C.jade}22`,borderRadius:20,padding:"7px 16px"}}>
+              {[0,1,2].map(i=><div key={i} style={{width:5,height:5,borderRadius:"50%",background:C.jade,animation:`glow ${.4+i*.13}s ease-in-out infinite alternate`}}/>)}
+              <span style={{fontSize:10,color:C.jade,fontFamily:"monospace",marginLeft:8}}>
+                {CSUITE.find(x=>x.id===chatAgent)?.name||"Brij"} is thinking…
+              </span>
+            </div>
+          </div>)}
+        </div>
+        <div style={{borderTop:`1px solid ${C.edge}`,background:C.base,padding:"14px 20px"}}>
+          <div style={{display:"flex",gap:10,alignItems:"flex-end"}}>
+            <VoiceBtn onDone={(clean)=>sendChat(clean,true)}/>
+            <div style={{flex:1,background:C.card,border:`1px solid ${C.line}`,borderRadius:10,padding:"10px 14px"}}>
+              <textarea value={chatInput} onChange={e=>setChatInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendChat();}}} placeholder="Type or speak (🎤) in English, Hindi, or Gujarati…" rows={2} disabled={chatLoading} style={{width:"100%",background:"transparent",border:"none",color:C.t0,fontSize:13,fontFamily:"inherit",resize:"none",outline:"none"}}/>
+            </div>
+            <button onClick={()=>sendChat()} disabled={!chatInput.trim()||chatLoading} style={{width:46,height:46,background:!chatInput.trim()||chatLoading?C.edge:C.jade,color:C.void,border:"none",borderRadius:10,fontSize:22,cursor:!chatInput.trim()||chatLoading?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontWeight:900,transition:"all .2s"}}>
+              {chatLoading?<span style={{width:16,height:16,border:"2px solid transparent",borderTopColor:C.t2,borderRadius:"50%",animation:"spin .7s linear infinite"}}/>:"↑"}
+            </button>
+          </div>
+          <div style={{fontSize:8,color:C.t4,fontFamily:"monospace",marginTop:5,textAlign:"center"}}>Enter = Send · 🎤 = Voice (WisprFlow method) · Memory persists across sessions</div>
+        </div>
+      </>)}
+
+      {/* AUTOMATION */}
+      {nav==="automation"&&(<div style={{flex:1,overflowY:"auto",padding:"24px 28px"}}>
+        <div style={{marginBottom:22}}>
+          <div style={{fontSize:8,color:C.gold,fontFamily:"monospace",letterSpacing:".2em",marginBottom:4}}>YOUR APPROVAL QUEUE</div>
+          <h2 style={{fontSize:22,fontWeight:900,color:C.t0,fontFamily:"monospace",marginBottom:6}}>
+            {pendingPosts.length>0?`${pendingPosts.length} post${pendingPosts.length>1?"s":""} waiting for your approval`:"No posts pending"}
+          </h2>
+          <div style={{fontSize:12,color:C.t2,marginBottom:16}}>Review each post. APPROVE or REJECT with feedback. Nothing goes live without your say.</div>
+          {/* Generate quick */}
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
+            {THEMES.slice(0,4).map(t=>(<button key={t.id} onClick={()=>generatePost(t.id)} disabled={postGenerating} style={{padding:"7px 14px",background:t.color+"15",color:t.color,border:`1px solid ${t.color}35`,borderRadius:20,fontSize:10,cursor:postGenerating?"not-allowed":"pointer",fontFamily:"monospace",fontWeight:700,display:"flex",alignItems:"center",gap:5}}>
+              {postGenerating&&<span style={{width:9,height:9,border:"2px solid transparent",borderTopColor:t.color,borderRadius:"50%",animation:"spin .7s linear infinite"}}/>}
+              {t.icon} Generate {t.label}
+            </button>))}
+          </div>
+        </div>
+        {posts.length===0&&(<div style={{textAlign:"center",padding:"50px 0",border:`1px dashed ${C.edge}`,borderRadius:12}}>
+          <div style={{fontSize:36,marginBottom:12,opacity:.3}}>⚡</div>
+          <div style={{color:C.t3,fontSize:13}}>No posts generated yet. Use the buttons above to generate your first post.</div>
+        </div>)}
+        <div style={{display:"flex",flexDirection:"column",gap:14}}>
+          {[...posts].map(post=>{
+            const STATCOL={pending:C.gold,approved:C.jade,rejected:C.rose};
+            const statusC=STATCOL[post.status]||C.jade;
+            const[rejectMode,setRejectMode]=useState(false);
+            const[rejectReason,setRejectReason]=useState("");
+            const isExpanded=expandedPost===post.id;
+            return(<div key={post.id} style={{background:C.card,border:`2px solid ${post.status==="pending"?C.gold:post.status==="approved"?C.jade:C.rose}`,borderRadius:12,overflow:"hidden",boxShadow:post.status==="pending"?`0 0 30px ${C.gold}15`:"none"}}>
+              {post.status==="pending"&&<div style={{height:3,background:`linear-gradient(90deg,${C.gold},${C.amber})`,animation:"breathe 2s ease-in-out infinite"}}/>}
+              <div style={{padding:"14px 18px",display:"flex",alignItems:"center",gap:12,cursor:"pointer",borderBottom:`1px solid ${C.edge}`}} onClick={()=>setExpandedPost(isExpanded?null:post.id)}>
+                <div style={{width:38,height:38,borderRadius:9,background:post.themeColor+"18",border:`1px solid ${post.themeColor}35`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{THEMES.find(t=>t.id===post.theme)?.icon||"📝"}</div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:3}}>
+                    <span style={{fontWeight:800,fontSize:13,color:C.t0,fontFamily:"monospace"}}>{post.scheduledDay} · {post.scheduledTime}</span>
+                    <Tag c={statusC}>{post.status.toUpperCase()}</Tag>
+                    <Tag c={post.themeColor||C.signal} xs>{post.themeName}</Tag>
+                    {post.qualityScore&&<Tag c={C.jade} xs>Score: {post.qualityScore}/100</Tag>}
+                  </div>
+                  <div style={{fontSize:11,color:C.t2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{post.text?.slice(0,80)}…</div>
+                </div>
+                <span style={{color:C.t3,fontSize:14,flexShrink:0}}>{isExpanded?"▲":"▼"}</span>
+              </div>
+              {isExpanded&&(<div style={{padding:"16px 18px"}}>
+                <div style={{background:C.deep,border:`1px solid ${C.line}`,borderRadius:8,padding:16,fontSize:13,color:C.t0,lineHeight:1.9,whiteSpace:"pre-wrap",marginBottom:14,maxHeight:400,overflowY:"auto"}}>{post.text}</div>
+                <div style={{display:"flex",gap:10,marginBottom:10,flexWrap:"wrap"}}>
+                  <button onClick={()=>navigator.clipboard?.writeText(post.text)} style={{background:"transparent",border:`1px solid ${C.edge}`,color:C.t1,borderRadius:7,padding:"7px 14px",fontSize:10,cursor:"pointer",fontFamily:"monospace"}}>⎘ COPY POST</button>
+                </div>
+                {post.status==="pending"&&!rejectMode&&(<div style={{background:C.gold+"08",border:`1px solid ${C.gold}25`,borderRadius:10,padding:"16px 18px"}}>
+                  <div style={{fontSize:11,color:C.gold,fontWeight:700,marginBottom:12}}>⬡ Your approval needed, Brijesh bhai</div>
+                  <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+                    <button onClick={()=>approvePost(post.id)} style={{flex:1,background:C.jade,color:C.void,border:"none",borderRadius:8,padding:"11px",fontSize:12,fontWeight:900,cursor:"pointer",fontFamily:"monospace"}}>✓ APPROVE — READY TO POST</button>
+                    <button onClick={()=>setRejectMode(true)} style={{flex:1,background:"transparent",color:C.rose,border:`1px solid ${C.rose}`,borderRadius:8,padding:"11px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"monospace"}}>✗ REJECT — REGENERATE</button>
+                  </div>
+                </div>)}
+                {post.status==="pending"&&rejectMode&&(<div style={{background:C.rose+"08",border:`1px solid ${C.rose}25`,borderRadius:10,padding:"16px 18px"}}>
+                  <div style={{fontSize:10,color:C.rose,fontFamily:"monospace",marginBottom:8}}>What should the agents fix?</div>
+                  <textarea value={rejectReason} onChange={e=>setRejectReason(e.target.value)} placeholder="e.g. Make it more personal, mention my Gujarat roots... or Add something about Matri Doodh... or The tone feels too formal..." rows={3} style={{width:"100%",background:C.deep,border:`1px solid ${C.line}`,borderRadius:7,color:C.t0,fontSize:12,padding:"10px 12px",fontFamily:"inherit",resize:"none",outline:"none",boxSizing:"border-box"}}/>
+                  <div style={{display:"flex",gap:10,marginTop:10}}>
+                    <button onClick={()=>{rejectPost(post.id,rejectReason);setRejectMode(false);setRejectReason("");}} style={{flex:1,background:C.rose,color:"#fff",border:"none",borderRadius:7,padding:"9px",fontSize:11,fontWeight:800,cursor:"pointer",fontFamily:"monospace"}}>↺ REJECT & REGENERATE</button>
+                    <button onClick={()=>setRejectMode(false)} style={{background:"transparent",border:`1px solid ${C.edge}`,color:C.t3,borderRadius:7,padding:"9px 16px",fontSize:11,cursor:"pointer",fontFamily:"monospace"}}>CANCEL</button>
+                  </div>
+                </div>)}
+                {post.status==="approved"&&(<div style={{background:C.jade+"08",border:`1px solid ${C.jade}25`,borderRadius:10,padding:"14px 16px"}}>
+                  <div style={{fontSize:11,color:C.jade,fontWeight:700,marginBottom:8}}>✓ APPROVED — How to publish</div>
+                  <div style={{fontSize:11,color:C.t1,lineHeight:1.8,marginBottom:12}}>1. Copy the post above → 2. Open LinkedIn → 3. Start a Post → 4. Paste & Publish at <strong style={{color:C.gold}}>{post.scheduledDay} · {post.scheduledTime} IST</strong></div>
+                  <button onClick={()=>navigator.clipboard?.writeText(post.text)} style={{background:C.jade,color:C.void,border:"none",borderRadius:7,padding:"8px 18px",fontSize:11,fontWeight:800,cursor:"pointer",fontFamily:"monospace"}}>⎘ COPY NOW & POST</button>
+                </div>)}
+              </div>)}
+            </div>);
+          })}
+        </div>
+      </div>)}
+
+      {/* TEAM */}
+      {nav==="team"&&(<div style={{flex:1,overflowY:"auto",padding:"24px 28px"}}>
+        <div style={{marginBottom:20}}>
+          <div style={{fontSize:8,color:C.signal,fontFamily:"monospace",letterSpacing:".2em",marginBottom:4}}>GLOBAL SIGNAL TEAM DIRECTORY</div>
+          <h2 style={{fontSize:22,fontWeight:900,color:C.t0,fontFamily:"monospace",marginBottom:6}}>74 Agents · 7 Departments</h2>
+          <div style={{fontSize:12,color:C.t2}}>Every agent has one job. One task. Perfect execution.</div>
+        </div>
+        {/* Dept filter */}
+        <div style={{display:"flex",gap:6,overflowX:"auto",marginBottom:18,paddingBottom:4}}>
+          {DEPTS.map(d=>(<button key={d.id} onClick={()=>setTeamFilter(d.id)} style={{padding:"5px 14px",background:teamFilter===d.id?d.color:"transparent",color:teamFilter===d.id?C.void:d.color,border:`1px solid ${teamFilter===d.id?d.color:d.color+"40"}`,borderRadius:20,fontSize:9,cursor:"pointer",fontFamily:"monospace",fontWeight:800,whiteSpace:"nowrap",transition:"all .15s"}}>{d.label}</button>))}
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          {visibleAgents.map(a=>(<div key={a.id} style={{background:C.card,border:`1px solid ${a.color}18`,borderRadius:10,padding:"14px 16px",display:"flex",alignItems:"flex-start",gap:12}}>
+            <Av agent={a} size={40}/>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:3}}>
+                <span style={{fontWeight:800,fontSize:13,color:C.t0}}>{a.name}</span>
+                <Tag c={a.color} xs>{a.role}</Tag>
+                {a.dept!=="csuite"&&<Tag c={C.t3} xs>{a.dept}</Tag>}
+              </div>
+              <div style={{fontSize:10,color:C.t2,lineHeight:1.5}}>{a.task}</div>
+            </div>
+          </div>))}
+        </div>
+      </div>)}
+
+      {/* YC INTEL */}
+      {nav==="ycintel"&&(<div style={{display:"flex",height:"100%",overflow:"hidden"}}>
+        {/* YC sidebar */}
+        <div style={{width:180,background:C.base,borderRight:`1px solid ${C.edge}`,display:"flex",flexDirection:"column",flexShrink:0}}>
+          <div style={{padding:"12px 12px 8px",borderBottom:`1px solid ${C.edge}`}}>
+            <div style={{fontSize:10,fontWeight:800,color:C.amber,fontFamily:"monospace",marginBottom:4}}>🔶 YC INTEL</div>
+            <div style={{fontSize:8,color:C.t3,lineHeight:1.5}}>5,690+ companies<br/>Live from yc-oss/api</div>
+          </div>
+          <div style={{flex:1,padding:"8px",overflowY:"auto"}}>
+            {[{id:"top",l:"⭐ Top Companies"},{id:"ai",l:"🤖 AI Companies"},{id:"health",l:"🏥 Healthcare"},{id:"hiring",l:"🟢 Now Hiring"},{id:"india",l:"🇮🇳 India Focus"}].map(f=>(<button key={f.id} onClick={()=>loadYC(f.id)} style={{display:"block",width:"100%",marginBottom:5,padding:"8px 10px",background:ycFilter===f.id?C.amber:C.card,color:ycFilter===f.id?C.void:C.t1,border:`1px solid ${ycFilter===f.id?C.amber:C.edge}`,borderRadius:7,fontSize:10,cursor:"pointer",textAlign:"left",fontFamily:"monospace",transition:"all .15s"}}>
+              {f.l}{ycLoading&&ycFilter===f.id&&<span style={{marginLeft:6,display:"inline-block",width:9,height:9,border:"2px solid transparent",borderTopColor:C.void,borderRadius:"50%",animation:"spin .7s linear infinite"}}/>}
+            </button>))}
+          </div>
+          <div style={{padding:"8px 12px",borderTop:`1px solid ${C.edge}`,fontSize:8,color:C.t4,fontFamily:"monospace",lineHeight:1.5}}>
+            Click filter → Browse results<br/>Or use AI Research chat →
+          </div>
+        </div>
+        {/* YC main */}
+        <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}}>
+          {/* Search + tabs */}
+          <div style={{padding:"10px 16px",borderBottom:`1px solid ${C.edge}`,background:C.base,display:"flex",gap:10,alignItems:"center"}}>
+            <input value={ycSearch} onChange={e=>setYcSearch(e.target.value)} placeholder={`Search ${ycData.length} loaded companies…`} style={{flex:1,background:C.card,border:`1px solid ${C.line}`,borderRadius:8,color:C.t0,fontSize:12,padding:"8px 12px",fontFamily:"inherit",outline:"none"}}/>
+            <div style={{fontSize:10,color:C.t3,fontFamily:"monospace",whiteSpace:"nowrap"}}>{filteredYC.length} results</div>
+          </div>
+          <div style={{flex:1,display:"flex",overflow:"hidden"}}>
+            {/* Company list */}
+            <div style={{flex:1,overflowY:"auto",padding:"14px 16px"}}>
+              {ycData.length===0&&!ycLoading&&(<div style={{textAlign:"center",padding:"40px 0",color:C.t3,fontSize:12}}>Select a filter on the left to load YC companies.</div>)}
+              {ycLoading&&(<div style={{textAlign:"center",padding:"40px"}}>
+                <div style={{display:"inline-block",width:20,height:20,border:`3px solid ${C.edge}`,borderTopColor:C.amber,borderRadius:"50%",animation:"spin .7s linear infinite",marginBottom:12}}/>
+                <div style={{color:C.t3,fontSize:11}}>Loading from YC API…</div>
+              </div>)}
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                {filteredYC.slice(0,60).map((c,i)=>(<div key={i} style={{background:C.card,border:`1px solid ${C.edge}`,borderRadius:9,padding:"12px 14px",transition:"all .2s"}}
+                  onMouseEnter={e=>{e.currentTarget.style.borderColor=C.amber;}}
+                  onMouseLeave={e=>{e.currentTarget.style.borderColor=C.edge;}}>
+                  <div style={{fontWeight:800,fontSize:12,color:C.t0,marginBottom:2}}>{c.name}</div>
+                  <div style={{fontSize:8,color:C.amber,fontFamily:"monospace",marginBottom:5}}>{c.batch} · {c.status}{c.isHiring?" · 🟢 HIRING":""}</div>
+                  <div style={{fontSize:10,color:C.t2,lineHeight:1.5,marginBottom:6}}>{c.one_liner?.slice(0,70)}</div>
+                  <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                    {(c.tags||[]).slice(0,3).map(t=><Tag key={t} c={C.amber} xs>{t}</Tag>)}
+                  </div>
+                </div>))}
+              </div>
+            </div>
+            {/* YC AI chat */}
+            <div style={{width:320,borderLeft:`1px solid ${C.edge}`,display:"flex",flexDirection:"column",flexShrink:0}}>
+              <div style={{padding:"10px 14px",borderBottom:`1px solid ${C.edge}`,background:C.base}}>
+                <div style={{fontSize:9,color:C.amber,fontFamily:"monospace",fontWeight:800}}>🔶 AI RESEARCH CHAT</div>
+                <div style={{fontSize:9,color:C.t3,marginTop:2}}>Ask Brij to analyse YC data for Global Signal</div>
+              </div>
+              <div ref={ycScrollRef} style={{flex:1,overflowY:"auto",padding:"14px 14px"}}>
+                {ycChatMsgs.length===0&&(<div style={{color:C.t3,fontSize:11,textAlign:"center",padding:"20px 0",lineHeight:1.8}}>
+                  Ask things like:<br/>
+                  <span style={{color:C.amber,fontSize:10}}>"Find healthcare AI companies we can partner with"</span><br/>
+                  <span style={{color:C.amber,fontSize:10}}>"Which YC founders invest in India healthtech?"</span>
+                </div>)}
+                {ycChatMsgs.map((m,i)=>{
+                  const isUser=m.from==="user";
+                  return(<div key={i} style={{display:"flex",flexDirection:"column",alignItems:isUser?"flex-end":"flex-start",marginBottom:12}}>
+                    <div style={{maxWidth:"90%",background:isUser?C.gold+"09":C.amber+"09",border:`1px solid ${isUser?C.gold:C.amber}20`,borderRadius:isUser?"10px 2px 10px 10px":"2px 10px 10px 10px",padding:"10px 13px",fontSize:12,color:C.t0,lineHeight:1.8,whiteSpace:"pre-wrap"}}>{m.text}</div>
+                  </div>);
+                })}
+                {ycLoading2&&(<div style={{display:"flex",gap:4,padding:"6px 0"}}>{[0,1,2].map(i=><div key={i} style={{width:5,height:5,borderRadius:"50%",background:C.amber,animation:`glow ${.4+i*.13}s ease-in-out infinite alternate`}}/>)}<span style={{fontSize:10,color:C.amber,marginLeft:6}}>Analysing…</span></div>)}
+              </div>
+              <div style={{borderTop:`1px solid ${C.edge}`,padding:"10px 12px"}}>
+                <div style={{display:"flex",gap:8}}>
+                  <input value={ycInput} onChange={e=>setYcInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")sendYCChat();}} placeholder="Ask about YC companies…" style={{flex:1,background:C.card,border:`1px solid ${C.line}`,borderRadius:8,color:C.t0,fontSize:11,padding:"8px 10px",fontFamily:"inherit",outline:"none"}}/>
+                  <button onClick={sendYCChat} disabled={!ycInput.trim()||ycLoading2} style={{width:36,height:36,background:!ycInput.trim()||ycLoading2?C.edge:C.amber,color:C.void,border:"none",borderRadius:8,fontSize:16,cursor:!ycInput.trim()||ycLoading2?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                    {ycLoading2?<span style={{width:12,height:12,border:"2px solid transparent",borderTopColor:C.void,borderRadius:"50%",animation:"spin .7s linear infinite"}}/>:"↑"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>)}
+
+    </main>
+  </div>);
+}
+
+const root=ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App/>);
+</script>
+</body>
+</html>
