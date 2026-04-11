@@ -1,0 +1,20 @@
+{
+  "name": "global-signal-backend",
+  "version": "1.0.0",
+  "description": "Global Signal — AI LinkedIn Optimization Platform Backend",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "start": "node api/health.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@vercel/node": "^3.0.0"
+  },
+  "author": "Brijesh Raval — Global Signal",
+  "license": "UNLICENSED",
+  "private": true
+}
